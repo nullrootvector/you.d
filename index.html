@@ -2,9 +2,7 @@
   <head>
     <title>Your Blue Report | USA | Coming Soon</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="A vibrant platform delivering democratic political coverage from local to national stories. Share perspectives and debate with fellow readers in our community. Stay informed and join the conversation on today's most pressing political issues."/>
+    <meta name="description" content="A vibrant platform delivering democratic political coverage from local to national stories. Share perspectives and debate with fellow readers in our community. Stay informed and join the conversation on today's most pressing political issues."/>
     <meta name="robots" content="index, follow" />
     <style>
       body,
@@ -13,9 +11,9 @@
         padding: 0;
         height: 100%;
         font-family: Arial, sans-serif;
-        /* The background is now handled by three.js */
         color: #fff;
-        overflow: hidden; /* Crucial to prevent scrollbars from canvas */
+        overflow: hidden;
+        background-color: #000; /* Base background */
       }
       .container {
         display: flex;
@@ -24,184 +22,225 @@
         align-items: center;
         height: 100%;
         text-align: center;
-        position: relative; /* Ensure it's on top of the canvas */
-        z-index: 1;       /* Ensure it's on top of the canvas */
+        position: relative;
+        z-index: 1;
+        padding: 20px;
       }
       h1 {
-        font-size: 4rem;
+        font-size: 3rem;
         margin-bottom: 1rem;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
       }
       #countdown {
-        font-size: 2rem;
+        font-size: 1.5rem;
         margin-bottom: 2rem;
+        font-weight: bold;
       }
-      /* The old .particle styles are no longer needed */
       #threejs-canvas {
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        z-index: 0; /* Behind the content */
+        z-index: 0;
+        opacity: 0; /* Initially hidden for fade-in */
+        transition: opacity 2s ease-in; /* Graceful fade-in transition */
+      }
+      #threejs-canvas.loaded {
+        opacity: 1; /* Visible once loaded */
+      }
+      #toggleBlueprintBtn {
+        background-color: rgba(255, 255, 255, 0.15);
+        border: none;
+        color: #fff;
+        padding: 10px 25px;
+        font-size: 1rem;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin-top: 20px;
+      }
+      #toggleBlueprintBtn:hover {
+        background-color: rgba(255, 255, 255, 0.25);
+      }
+      #blueprintPanel {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        max-height: 100vh;
+        background-color: rgba(0, 0, 0, 0.95);
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+        color: #fff;
+        padding: 20px;
+        box-sizing: border-box;
+        transform: translateY(100%);
+        transition: transform 0.5s ease-in-out;
+        z-index: 100;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+      }
+      #blueprintPanel.blueprint-panel--visible {
+        transform: translateY(0);
+      }
+      #blueprintPanel h2 {
+        margin-top: 0;
+        color: white;
+      }
+      #blueprintPanel p {
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin-bottom: 20px;
+      }
+      #closeBlueprintBtn {
+        background-color: rgba(255, 255, 255, 0.15);
+        border: none;
+        color: #fff;
+        padding: 8px 15px;
+        font-size: 0.9rem;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        align-self: flex-end;
+      }
+      #closeBlueprintBtn:hover {
+        background-color: rgba(255, 255, 255, 0.25);
+      }
+      footer {
+        position: absolute;
+        bottom: 10px;
+        width: 100%;
+        text-align: center;
+        font-size: 0.8rem;
+        color: rgba(255,255,255,0.6);
       }
     </style>
   </head>
   <body>
     <div class="container">
-      <h1>Public Beta Release On Or Before</h1>
+      <h1>Public Beta Launches On Or Before</h1>
       <div id="countdown"></div>
+      <button id="toggleBlueprintBtn">Read Our Vision</button>
     </div>
+    <div id="blueprintPanel">
+      <h2>The Crisis of Civic Engagement</h2>
+      <p>The United States faces a mounting crisis of public trust in its institutions, fueled by a fragmented civic discourse dominated by sensationalism and ideological polarization. Social media, once heralded as a democratizing force, has devolved into a system optimized for outrage, clickbait, and profit. Against this backdrop, the Civic Platform emerges as a necessary countermeasure—a rigorously non-commercial, digital civic infrastructure designed to foster transparency, respect, and informed participation in American democracy. It offers a new kind of digital commons: one free from ads, attention manipulation, and partisan algorithmic curation.</p>
+      <h2>Principles and Architecture</h2>
+      <p>What sets this platform apart is its structural integrity and values-driven design. It refuses to monetize engagement or personal data. Instead, the architecture centers on transparency, participatory equity, and content quality. By forgoing algorithmic personalization, the platform avoids reinforcing filter bubbles or ideological silos. Instead, users encounter content based on merit and relevance—selected through community-vetted, temporally limited voting mechanisms that preserve democratic freshness and prevent consensus fatigue.</p>
+      <p>The heart of the interface features twelve user-curated, academic-style submissions linked directly to relevant government officials or institutions. Each contribution includes a sidebar that contextualizes the role and function of the official or agency in question. A secure, anonymous messaging module allows users to communicate directly with those public offices—creating a channel for structured civic feedback that transcends performative posting and drives actionable dialogue.</p>
+      <h2>Usability and Engagement Tools</h2>
+      <p>The platform’s interaction layer is designed for real-time yet reflective dialogue. A bottom-tab chat interface enables group discussion with moderation powered by natural language processing algorithms. These systems detect semantic and syntactic anomalies to maintain discourse quality without relying on biased manual interventions. Limited emotive glyphs enable users to share sentiment without enabling meme culture or derailing conversation. In addition, machine-learning-driven text-to-speech capabilities provide accessibility for users with auditory or cognitive impairments, ensuring inclusivity across the board.</p>
+      <h2>Technical Integrity and Security</h2>
+      <p>Behind the scenes, the infrastructure is both robust and scalable. A horizontally scalable SQL-based system supports billions of discrete message units, each encoded with rich metadata and stored securely. User differentiation relies on fingerprinting browser and device traits—preserving anonymity while ensuring behavioral continuity. Federated chat environments segmented by U.S. states encourage local relevance and amplify community identity within the broader national dialogue.</p>
+      <h2>A Model for Trustworthy Information</h2>
+      <p>The platform’s commitment to truth is safeguarded by a decentralized scholarly verification collective. Comprised of academically credentialed volunteers, this group reviews user submissions through a 24-hour vetting cycle. Content is assessed for empirical accuracy and adherence to a codified ethical framework. The result is not censorship but intellectual stewardship: a deliberate effort to cultivate a space where facts matter, and disinformation is systematically excluded.</p>
+      <h2>Transparent and Democratic Governance</h2>
+      <p>The platform is governed by the very values it seeks to elevate. Sustained by an independent trust, it is permanently insulated from commercial revenue models and market influence. Leadership is decentralized and operates on principles of equitable stakeholder representation. Systems of internal accountability and user-driven oversight prevent institutional drift or concentration of control. Volunteers operate under strict onboarding, transparency, and procedural standards, ensuring operational integrity and resilience against ideological subversion.</p>
+      <h2>A Vision for the Future</h2>
+      <p>At a time when American democracy feels increasingly performative and inaccessible, this Civic Platform offers a bold new model for engagement. It is transparent, inclusive, and rooted in shared civic responsibility. It doesn’t aim to replace existing institutions but to supplement them with a digital space worthy of a functioning democracy. This is not just a tool—it’s a digital public utility, designed to reestablish a meaningful connection between citizens and their government. It’s what civic tech should have been all along: honest, intelligent, and fundamentally human.</p>
 
+
+      <button id="closeBlueprintBtn">Close</button>
+    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-
     <script>
-      // Countdown Timer Logic (remains the same)
       const countDownDate = new Date("2025-09-18T00:00:00").getTime();
       const countdownElement = document.getElementById("countdown");
-
       const updateCountdown = () => {
         const now = new Date().getTime();
         const distance = countDownDate - now;
-
+        if (distance < 0) {
+          countdownElement.innerHTML = "RELEASED";
+          // clearInterval(countdownInterval); // Clear interval when countdown ends
+          return;
+        }
         const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const hours = Math.floor(
-          (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-        );
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-        if (countdownElement) {
-            countdownElement.innerHTML =
-            days +
-            " DAYS " +
-            hours +
-            " HOURS " +
-            minutes +
-            " MINUTES " +
-            seconds +
-            " SECONDS ";
-        }
-
-
-        if (distance < 0) {
-          clearInterval(countdownInterval);
-          if (countdownElement) {
-            countdownElement.innerHTML = "RELEASED";
-          }
-        }
+        countdownElement.innerHTML = `${days} DAYS ${hours} HOURS ${minutes} MINUTES ${seconds} SECONDS`;
       };
+      const countdownInterval = setInterval(updateCountdown, 1000); // Assign to variable to clear later if needed
+      updateCountdown();
 
-      const countdownInterval = setInterval(updateCountdown, 1000);
-      updateCountdown(); // Initial call to display immediately
-
-      // Three.js Background Animation
       let scene, camera, renderer, stars;
       let mouseX = 0, mouseY = 0;
-
       function initThreeJS() {
-        // Scene
         scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x000000); // Dark background
-
-        // Camera
-        camera = new THREE.PerspectiveCamera(
-          60, // Field of view
-          window.innerWidth / window.innerHeight, // Aspect ratio
-          1, // Near clipping plane
-          1000 // Far clipping plane
-        );
-        camera.position.z = 1; // Move camera back slightly to see origin
-        camera.rotation.x = Math.PI / 2; // Rotate camera to look "down" if stars are in XY plane
-
-        // Renderer
-        renderer = new THREE.WebGLRenderer({ antialias: true });
+        // scene.background is not set here, allowing body background to show initially if desired,
+        // or three.js default (black) will be used by the renderer.
+        // For the fade-in, CSS handles initial body background, then canvas fades on top.
+        camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000); // Adjusted near plane
+        camera.position.z = 1.5; // Start camera a bit further back for zoom
+        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); // alpha:true for transparent background if needed
         renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.domElement.id = 'threejs-canvas'; // Assign an ID for styling if needed
-        document.body.insertBefore(renderer.domElement, document.body.firstChild); // Insert canvas as first child
-
-
-        // Starfield
+        renderer.domElement.id = 'threejs-canvas';
+        document.body.insertBefore(renderer.domElement, document.body.firstChild);
         const starGeometry = new THREE.BufferGeometry();
-        const starMaterial = new THREE.PointsMaterial({
-          color: 0xffffff, // White stars
-          size: 0.7,
-          sizeAttenuation: true, // Star size reduces with distance
-        });
-
+        const starMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.007, sizeAttenuation: true }); // Adjusted star size
         const starVertices = [];
-        for (let i = 0; i < 10000; i++) { // Number of stars
-          const x = (Math.random() - 0.5) * 2000; // Spread stars across a large area
-          const y = (Math.random() - 0.5) * 2000;
-          const z = (Math.random() - 0.5) * 2000; // Give depth to the starfield
+        for (let i = 0; i < 15000; i++) { // Increased star count slightly
+          const x = (Math.random() - 0.5) * 8; // Adjusted spread for new camera Z
+          const y = (Math.random() - 0.5) * 8;
+          const z = (Math.random() - 0.5) * 8;
           starVertices.push(x, y, z);
         }
-
         starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
         stars = new THREE.Points(starGeometry, starMaterial);
         scene.add(stars);
 
-        // Event Listeners
-        window.addEventListener('resize', onWindowResize, false);
-        document.addEventListener('mousemove', onMouseMove, false);
+        // Trigger canvas fade-in
+        setTimeout(() => {
+            if(renderer.domElement) {
+                 renderer.domElement.classList.add('loaded');
+            }
+        }, 100); // Small delay to ensure it's ready
 
+        window.addEventListener('resize', onWindowResize);
+        document.addEventListener('mousemove', onMouseMove);
         animate();
       }
-
       function onWindowResize() {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
       }
-
       function onMouseMove(event) {
-        // Normalize mouse position from -1 to 1
         mouseX = (event.clientX / window.innerWidth) * 2 - 1;
         mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
       }
-
       function animate() {
         requestAnimationFrame(animate);
 
-        // Subtle star animation
-        if (stars) {
-          stars.rotation.z += 0.0002; // Slow rotation of the entire starfield
+        // Gentle Cosmic Drift (Slow Zoom In)
+        if (camera.position.z > 0.3) { // Stop zoom at a closer point
+            camera.position.z -= 0.0003; // Slower zoom speed
         }
 
-        // Subtle camera movement based on mouse (parallax effect)
-        // Adjust these values for more/less sensitivity
-        camera.position.x += (mouseX * 0.5 - camera.position.x) * 0.02;
-        camera.position.y += (mouseY * 0.5 - camera.position.y) * 0.02;
-        // Ensure camera looks towards the center of the starfield or a fixed point
-        camera.lookAt(scene.position);
-
-
+        stars.rotation.y += 0.0001;
+        stars.rotation.x += 0.00005;
+        camera.position.x += (mouseX * 0.1 - camera.position.x) * 0.02; // Slightly adjusted mouse parallax
+        camera.position.y += (mouseY * 0.1 - camera.position.y) * 0.02;
+        camera.lookAt(scene.position); // Ensure camera always looks at the center of the scene (0,0,0)
         renderer.render(scene, camera);
       }
-
-      // Initialize Three.js after the DOM is ready
       if (typeof THREE !== 'undefined') {
         initThreeJS();
       } else {
         console.error("Three.js library not loaded.");
       }
 
-      // The old particle animation script is removed.
-    </script>
-  </body>
-  <footer>
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-5KPL642T9Z"
-    ></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
+      const toggleBtn = document.getElementById('toggleBlueprintBtn');
+      const blueprintPanel = document.getElementById('blueprintPanel');
+      const closeBtn = document.getElementById('closeBlueprintBtn');
+      if(toggleBtn && blueprintPanel && closeBtn) { // Added checks for element existence
+          toggleBtn.addEventListener('click', () => blueprintPanel.classList.toggle('blueprint-panel--visible'));
+          closeBtn.addEventListener('click', () => blueprintPanel.classList.remove('blueprint-panel--visible'));
       }
-      gtag("js", new Date());
-      gtag("config", "G-5KPL642T9Z");
     </script>
-  </footer>
-</html>
-
+    <footer>
+      &copy; 2025 Quantitative System Dynamics & Company. All Rights Reserved.
+    </footer>
+  </body>
+</html>     
