@@ -1,348 +1,129 @@
-<html>
-  <head>
-    <title>Your Blue Report | USA | Coming Soon</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="A vibrant platform delivering democratic political coverage from local to national stories. Share perspectives and debate with fellow readers in our community. Stay informed and join the conversation on today's most pressing political issues."/>
-    <meta name="robots" content="index, follow" />
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🇺🇸 You Project Update</title>
     <style>
-      body,
-      html {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Slightly more refined font */
-        color: #fff;
-        overflow: hidden;
-        background-color: #000; /* Base background */
-      }
-      .container {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
-        text-align: center;
-        position: relative;
-        z-index: 1;
-        padding: 20px;
-      }
-      h1 {
-        font-size: 3rem; /* Adjusted from 3rem */
-        margin-bottom: 1rem;
-        text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
-        opacity: 0; /* Initially hidden for animation */
-        animation: fadeInGrowHeadline 1.2s ease-out 0.5s forwards; /* Delay to start after canvas fade */
-      }
-      @keyframes fadeInGrowHeadline {
-        0% {
-          opacity: 0;
-          transform: scale(0.95) translateY(10px);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        100% {
-          opacity: 1;
-          transform: scale(1) translateY(0);
-        }
-      }
-      #countdown {
-        font-size: 1.5rem;
-        margin-bottom: 2rem;
-        font-weight: bold;
-      }
-      #threejs-canvas {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 0; /* Canvas behind hotspots and content */
-        opacity: 0;
-        transition: opacity 2s ease-in;
-      }
-      #threejs-canvas.loaded {
-        opacity: 1;
-      }
-      #toggleBlueprintBtn {
-        background-color: rgba(255, 255, 255, 0.15);
-        border: none;
-        color: #fff;
-        padding: 10px 25px;
-        font-size: 1rem;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-        margin-top: 20px;
-      }
-      #toggleBlueprintBtn:hover {
-        background-color: rgba(255, 255, 255, 0.25);
-      }
-      #blueprintPanel {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        max-height: 100vh;
-        background-color: rgba(0, 0, 0, 0.95);
-        border-top: 1px solid rgba(255, 255, 255, 0.2);
-        color: #fff;
-        padding: 20px;
-        box-sizing: border-box;
-        transform: translateY(100%);
-        transition: transform 0.5s ease-in-out;
-        z-index: 100;
-        overflow-y: auto;
-        display: flex;
-        flex-direction: column;
-      }
-      #blueprintPanel.blueprint-panel--visible {
-        transform: translateY(0);
-      }
-      #blueprintPanel h2 {
-        margin-top: 0;
-        color: white;
-        margin-bottom: 0.75em;
-      }
-      #blueprintPanel p {
-        font-size: 0.95rem;
-        line-height: 1.6;
-        margin-bottom: 1.2em;
-      }
-      #closeBlueprintBtn {
-        background-color: rgba(255, 255, 255, 0.15);
-        border: none;
-        color: #fff;
-        padding: 8px 15px;
-        font-size: 0.9rem;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-        align-self: flex-end;
-        margin-top: 20px;
-      }
-      #closeBlueprintBtn:hover {
-        background-color: rgba(255, 255, 255, 0.25);
-      }
-      footer {
-        position: absolute;
-        bottom: 10px;
-        width: 100%;
-        text-align: center;
-        font-size: 0.8rem;
-        color: rgba(255,255,255,0.6);
-        opacity: 0; /* Initially hidden for fade-in */
-        transition: opacity 1.5s ease-in-out 1s; /* Delay fade-in */
-      }
-      footer.visible {
-        opacity: 0.6;
-      }
 
-      /* Constellation Styles */
-      .constellation-hotspot-container {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 0; /* Just above canvas, below main content */
-        pointer-events: none; /* Container itself doesn't block mouse */
-      }
-      .constellation-hotspot {
-        position: absolute;
-        /* background-color: rgba(255,0,0,0.1); */ /* For debugging hotspots */
-        border-radius: 50%;
-        pointer-events: auto; /* Hotspots are interactive */
-        transition: all 0.3s ease;
-      }
-      .constellation-visual {
-        position: absolute;
-        opacity: 0;
-        transition: opacity 0.5s ease-in-out;
-        pointer-events: none; /* Visuals don't block mouse */
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-      }
-      .constellation-visual.visible {
-        opacity: 1;
-      }
-      .constellation-lines {
-        width: 100px; /* Adjust as needed */
-        height: 100px; /* Adjust as needed */
-        stroke: rgba(173, 216, 230, 0.4); /* Faint light blue */
-        stroke-width: 1px;
-      }
-      .constellation-tooltip {
-        background-color: rgba(0,0,0,0.7);
-        color: #87CEFA; /* Light Sky Blue */
-        padding: 3px 7px;
-        border-radius: 3px;
-        font-size: 0.75rem;
-        margin-top: 5px;
-        text-align: center;
-      }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            overflow: hidden;
+            background: #000;
+            color: #fff;
+        }
+
+        #starfield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .content {
+            position: relative;
+            z-index: 2;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .apology-container {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 60px;
+            max-width: 600px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            animation: fadeIn 1.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            font-weight: 300;
+            letter-spacing: 2px;
+            color: #ffd700;
+        }
+
+        p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 25px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .heart {
+            display: inline-block;
+            color: #ff6b6b;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @media (max-width: 768px) {
+            .apology-container {
+                padding: 40px 30px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            p {
+                font-size: 1.1rem;
+            }
+        }
     </style>
-  </head>
-  <body>
-    <div class="constellation-hotspot-container">
-      <div class="constellation-hotspot" id="hotspotVeritas" style="top: 20%; left: 15%; width: 150px; height: 150px;"></div>
-      <div class="constellation-visual" id="visualVeritas" style="top: 22%; left: 17%;">
-        <svg class="constellation-lines" viewBox="0 0 100 100">
-          <line x1="20" y1="80" x2="50" y2="20" /> <line x1="50" y1="20" x2="80" y2="80" />
-        </svg>
-        <div class="constellation-tooltip">Veritas (Truth)</div>
-      </div>
-
-      <div class="constellation-hotspot" id="hotspotCivitas" style="top: 60%; left: 70%; width: 180px; height: 180px;"></div>
-      <div class="constellation-visual" id="visualCivitas" style="top: 62%; left: 72%;">
-        <svg class="constellation-lines" viewBox="0 0 100 100">
-          <circle cx="30" cy="30" r="3" fill="rgba(173, 216, 230, 0.4)"/>
-          <circle cx="70" cy="30" r="3" fill="rgba(173, 216, 230, 0.4)"/>
-          <circle cx="50" cy="70" r="3" fill="rgba(173, 216, 230, 0.4)"/>
-          <line x1="30" y1="30" x2="70" y2="30" /> <line x1="70" y1="30" x2="50" y2="70" /> <line x1="50" y1="70" x2="30" y2="30" />
-        </svg>
-        <div class="constellation-tooltip">Civitas (Community)</div>
-      </div>
+</head>
+<body>
+    <canvas id="starfield"></canvas>
+    
+    <div class="content">
+        <div class="apology-container">
+            <h1>🇺🇸 You Project Update</h1>
+            <p>We deeply regret to inform you that this project has been <i>canceled.</i></p>
+            <p>Despite our best efforts and initial enthusiasm, circumstances beyond our control have made it impossible to continue development.</p>
+            <p>We understand this news may be disappointing, and for that, we sincerely apologize <span class="heart">♥</span></p>
+            <p>Thank you for your interest, support, and patience throughout this journey. Your enthusiasm meant the world to us.</p>
+        </div>
     </div>
 
-    <div class="container">
-      <h1>Public Beta Launches On Or Before</h1>
-      <div id="countdown"></div>
-      <button id="toggleBlueprintBtn">Read Our Vision</button>
-    </div>
-
-    <div id="blueprintPanel">
-      <h2>The Challenge: Rebuilding Civic Trust</h2>
-      <p>The United States grapples with eroding public trust, as civic discourse becomes increasingly fragmented and polarized. Current digital platforms, often optimized for outrage and profit, can exacerbate these divisions.</p>
-      <p>In response, "Your Blue Report" is emerging as a dedicated digital commons—a rigorously non-commercial civic infrastructure. Our purpose is to cultivate transparency, foster respectful dialogue, and empower informed participation in American democracy, free from advertising, attention manipulation, and partisan algorithmic curation.</p>
-      <h2>Our Core Commitments</h2>
-      <p><strong>Integrity First:</strong> We are structurally non-commercial, never monetizing your engagement or personal data. Our architecture prioritizes your privacy and ensures participatory equity.</p>
-      <p><strong>Quality & Transparency:</strong> We champion content quality through community-vetted mechanisms and transparent processes, moving beyond filter bubbles to foster genuine understanding and combat disinformation.</p>
-      <p><strong>Actionable Dialogue:</strong> We facilitate direct, structured communication with public offices, transforming civic feedback into meaningful engagement and fostering accountability.</p>
-      <p><strong>Inclusive & Secure by Design:</strong> Accessibility is integral, with features ensuring broad participation. Our robust, secure, and scalable infrastructure supports this vision, safeguarding user anonymity and promoting relevant local discourse within a national framework.</p>
-      <h2>The Path Forward: A New Civic Standard</h2>
-      <p>Governed by an independent trust and guided by principles of decentralized, equitable stakeholder representation, "Your Blue Report" is insulated from market pressures. A dedicated collective will ensure content veracity, upholding a space where facts matter. (Full details on our governance, verification framework, and technical architecture will be shared in our upcoming whitepaper.)</p>
-      <p>At a time when American democracy can feel performative and inaccessible, this Civic Platform offers a bold new model. It is transparent, inclusive, and rooted in shared civic responsibility. It doesn’t aim to replace existing institutions but to supplement them with a digital space worthy of a functioning democracy. This is not just a tool—it’s a digital public utility, designed to reestablish a meaningful connection between citizens and their government. It’s what civic tech should have been all along: honest, intelligent, and fundamentally human.</p>
-      <button id="closeBlueprintBtn">Close</button>
-    </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script>
-      // Countdown Timer
-      const countDownDate = new Date("2025-09-18T00:00:00").getTime();
-      const countdownElement = document.getElementById("countdown");
-      const updateCountdown = () => {
-        const now = new Date().getTime();
-        const distance = countDownDate - now;
-        if (distance < 0) {
-          countdownElement.innerHTML = "RELEASED";
-          // clearInterval(countdownInterval);
-          return;
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.158.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.158.0/examples/jsm/"
+            }
         }
-        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-        countdownElement.innerHTML = `${days} DAYS ${hours} HOURS ${minutes} MINUTES ${seconds} SECONDS`;
-      };
-      const countdownInterval = setInterval(updateCountdown, 1000);
-      updateCountdown();
-
-      // Three.js Background
-      let scene, camera, renderer, stars;
-      let mouseX = 0, mouseY = 0;
-      function initThreeJS() {
-        scene = new THREE.Scene();
-        camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.z = 1.5;
-        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.domElement.id = 'threejs-canvas';
-        document.body.insertBefore(renderer.domElement, document.body.firstChild); // Prepend canvas
-        const starGeometry = new THREE.BufferGeometry();
-        const starMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.007, sizeAttenuation: true });
-        const starVertices = [];
-        for (let i = 0; i < 15000; i++) {
-          const x = (Math.random() - 0.5) * 8;
-          const y = (Math.random() - 0.5) * 8;
-          const z = (Math.random() - 0.5) * 8;
-          starVertices.push(x, y, z);
-        }
-        starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
-        stars = new THREE.Points(starGeometry, starMaterial);
-        scene.add(stars);
-        setTimeout(() => {
-            if(renderer.domElement) renderer.domElement.classList.add('loaded');
-        }, 100);
-        window.addEventListener('resize', onWindowResize);
-        document.addEventListener('mousemove', onMouseMove);
-        animate();
-      }
-      function onWindowResize() {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-      }
-      function onMouseMove(event) {
-        mouseX = (event.clientX / window.innerWidth) * 2 - 1;
-        mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
-      }
-      function animate() {
-        requestAnimationFrame(animate);
-        if (camera.position.z > 0.3) camera.position.z -= 0.0003;
-        stars.rotation.y += 0.0001;
-        stars.rotation.x += 0.00005;
-        camera.position.x += (mouseX * 0.1 - camera.position.x) * 0.02;
-        camera.position.y += (mouseY * 0.1 - camera.position.y) * 0.02;
-        camera.lookAt(scene.position);
-        renderer.render(scene, camera);
-      }
-      if (typeof THREE !== 'undefined') initThreeJS();
-      else console.error("Three.js library not loaded.");
-
-      // Blueprint Panel Toggle
-      const toggleBtn = document.getElementById('toggleBlueprintBtn');
-      const blueprintPanel = document.getElementById('blueprintPanel');
-      const closeBtn = document.getElementById('closeBlueprintBtn');
-      if(toggleBtn && blueprintPanel && closeBtn) {
-          toggleBtn.addEventListener('click', () => blueprintPanel.classList.toggle('blueprint-panel--visible'));
-          closeBtn.addEventListener('click', () => blueprintPanel.classList.remove('blueprint-panel--visible'));
-      }
-
-      // Footer Fade-In
-      setTimeout(() => {
-        const footerElement = document.querySelector('footer');
-        if (footerElement) footerElement.classList.add('visible');
-      }, 2500); // Delay footer appearance
-
-      // Constellation Interaction
-      const hotspots = [
-        { id: 'hotspotVeritas', visualId: 'visualVeritas' },
-        { id: 'hotspotCivitas', visualId: 'visualCivitas' }
-      ];
-      hotspots.forEach(item => {
-        const hotspotElement = document.getElementById(item.id);
-        const visualElement = document.getElementById(item.visualId);
-        if (hotspotElement && visualElement) {
-          hotspotElement.addEventListener('mouseenter', () => {
-            visualElement.classList.add('visible');
-          });
-          hotspotElement.addEventListener('mouseleave', () => {
-            visualElement.classList.remove('visible');
-          });
-        }
-      });
     </script>
-    </body>
-    <footer>
-      &copy; 2025 Quantitative System Dynamics & Company. All Rights Reserved.
-      <script async src="https://www.googletagmanager.com/gtag/js?id=G-D796GFY9V8"> </script>
-      <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag("js", new Date());
-      gtag("config", "G-D796GFY9V8");
-      </script>
-    </footer>
+    
+    <script type="module" src="starfield.js"></script>
+</body>
 </html>
+
